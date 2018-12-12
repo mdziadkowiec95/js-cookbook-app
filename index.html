@@ -1,0 +1,41 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <h1 class="title">Recipes App</h1>
+  </header>
+  <div class="container">
+    <div class="top">
+      <div class="panel">
+        <input type="text" class="panel__name form-control" id="" placeholder="Ingredient name">
+        <input type="number" class="panel__amount form-control" id="" placeholder="Amount">
+        <select class="panel__unit form-control">
+          <option value="g">grams</option>
+          <option value="scoop">scoop</option>
+          <option value="pinch">pinch</option>
+        </select>
+        <button class="add-ingredient btn btn-primary">Add</button>
+      </div>
+
+      <div class="current-recipe">
+        <ul class="current-recipe__list">
+
+        </ul>
+      </div>
+    </div>
+    <hr>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
