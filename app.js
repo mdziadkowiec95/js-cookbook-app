@@ -7,9 +7,15 @@ var recipesController = (function () {
     this.unit = unit;
   };
 
+  var Recipe = function (id, recipe) {
+    this.id = id;
+    this.recipe = recipe;
+  };
+
   var data = {
 
-    currentRecipe: []
+    currentRecipe: [],
+    allRecipes: []
 
   };
 
@@ -30,6 +36,33 @@ var recipesController = (function () {
       return newItem;
     },
 
+    removeItem: function (ID) {
+
+      idArr = data.currentRecipe.map(function (cur) {
+        return cur.id;
+      });
+      // debugger;
+      data.currentRecipe.splice(idArr.indexOf(ID), 1);
+    },
+
+    addCurRecipe: function () {
+      var newRecipe, ID;
+
+      ID = 'testID';
+
+      if (data.allRecipes.length > 0) {
+        ID = data.allRecipes[data.allRecipes.length - 1].id + 1;
+      } else {
+        ID = 0;
+      }
+
+      newRecipe = new Recipe(ID, data.currentRecipe);
+
+      data.allRecipes.push(newRecipe);
+
+
+    },
+
     showData: function () {
       console.log(data);
     }
@@ -44,8 +77,12 @@ var UIController = (function () {
     ingredientName: '.panel__name',
     ingredientAmount: '.panel__amount',
     ingredientUnit: '.panel__unit',
+    currentRecipeList: '.current-recipe__list',
+
+    // buttons
     addIngredientBtn: '.add-ingredient',
-    currentRecipeList: '.current-recipe__list'
+    saveRecipeBtn: '.current-recipe__save'
+
   }
 
   return {
@@ -116,12 +153,21 @@ var controller = (function (recipesCtrl, UICtrl) {
   var DOM = UICtrl.getDOMstrings();
 
   var setupEventListeners = function () {
+
+    // add one ingredient to current recipe
     document.querySelector(DOM.addIngredientBtn).addEventListener('click', addIngredient);
     document.addEventListener('keypress', function (e) {
       if (e.keyCode === 13) {
         addIngredient();
       }
     });
+
+    // delete one ingredient from current recipe
+    document.querySelector(DOM.currentRecipeList).addEventListener('click', deleteIngredient);
+
+
+    document.querySelector(DOM.saveRecipeBtn).addEventListener('click', saveCurrentRecipe);
+
   }
 
 
@@ -139,10 +185,40 @@ var controller = (function (recipesCtrl, UICtrl) {
 
   }
 
+  var deleteIngredient = function (e) {
+
+    var parent = e.target.parentNode;
+
+    if (parent.id && e.target.tagName === 'BUTTON') {
+
+      recipesCtrl.removeItem(parseInt(parent.id));
+      document.querySelector(DOM.currentRecipeList).removeChild(parent);
+    }
+  }
+
+  var saveCurrentRecipe = function () {
+
+    // add current recipe to DATA structure
+    recipesCtrl.addCurRecipe();
+    // clear current recipe DATA array
+
+    // add current recipe to the UI
+
+    // clear the current-recipe UI
+
+    //
+
+
+  }
+
 
   return {
     init: function () {
+      // Make ingredient input focused when App starts
       document.querySelector(DOM.ingredientName).focus();
+
+      // Disable SAVE button when App starts
+      document.querySelector(DOM.saveRecipeBtn).disabled = false;
 
       setupEventListeners();
     }

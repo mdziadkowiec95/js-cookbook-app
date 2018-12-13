@@ -17,16 +17,21 @@
     <div class="top">
       <div class="panel">
         <input type="text" class="panel__name form-control" id="" placeholder="Ingredient name">
-        <input type="number" class="panel__amount form-control" id="" placeholder="Amount">
-        <select class="panel__unit form-control">
-          <option value="g">grams</option>
-          <option value="scoop">scoop</option>
-          <option value="pinch">pinch</option>
-        </select>
+        <div class="panel__group">
+          <input type="number" class="panel__amount form-control" id="" placeholder="Amount">
+          <select class="panel__unit form-control">
+            <option value="g">grams</option>
+            <option value="ml">ml</option>
+            <option value="scoop">scoop</option>
+            <option value="pinch">pinch</option>
+          </select>
+        </div>
+
         <button class="add-ingredient btn btn-primary">Add</button>
       </div>
 
       <div class="current-recipe">
+        <button class="current-recipe__save btn btn-success">Save recipe</button>
         <ul class="current-recipe__list">
 
         </ul>

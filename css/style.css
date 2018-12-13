@@ -14,12 +14,24 @@
   background-color: #fff;
 }
 
+.panel__group {
+  display: flex;
+}
+
 .current-recipe {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  margin-left: 1em;
   background-color: #fff;
 }
 
 .current-recipe__list {
+  max-height: 280px;
+  /* box-shadow: -1px -1px 6px #ccc; */
+  /* overflow: scroll; */
   list-style-type: square;
+  padding: 0.5em;
 }
 
 .current-recipe__item {
