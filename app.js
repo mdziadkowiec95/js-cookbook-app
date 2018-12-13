@@ -155,7 +155,11 @@ var UIController = (function () {
     },
 
     curRecipeDelChild: function (id) {
-      newRecipe.removeChild(newRecipe.children[id]);
+      for (var i = 0; i < newRecipe.children.length; i++) {
+        if (newRecipe.children[i].id == id) {
+          newRecipe.removeChild(newRecipe.children[i]);
+        }
+      }
     },
 
     addRecipe: function (id) {
