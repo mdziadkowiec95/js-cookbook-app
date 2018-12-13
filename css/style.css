@@ -26,6 +26,10 @@
   background-color: #fff;
 }
 
+.current-recipe__add-recipe {
+  display: flex;
+}
+
 .current-recipe__list {
   max-height: 280px;
   /* box-shadow: -1px -1px 6px #ccc; */
@@ -60,6 +64,15 @@
     font-weight: 700;
 }
 
+.recipes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.recipes__list {
+  flex: 20%;
+  max-width: 300px;
+}
 
 
 

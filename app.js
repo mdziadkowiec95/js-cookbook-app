@@ -7,8 +7,9 @@ var recipesController = (function () {
     this.unit = unit;
   };
 
-  var Recipe = function (id, recipe) {
+  var Recipe = function (id, name, recipe) {
     this.id = id;
+    this.name = name;
     this.recipe = recipe;
   };
 
@@ -45,10 +46,8 @@ var recipesController = (function () {
       data.currentRecipe.splice(idArr.indexOf(ID), 1);
     },
 
-    addCurRecipe: function () {
+    addCurRecipe: function (name) {
       var newRecipe, ID;
-
-      ID = 'testID';
 
       if (data.allRecipes.length > 0) {
         ID = data.allRecipes[data.allRecipes.length - 1].id + 1;
@@ -56,10 +55,12 @@ var recipesController = (function () {
         ID = 0;
       }
 
-      newRecipe = new Recipe(ID, data.currentRecipe);
+      newRecipe = new Recipe(ID, name, data.currentRecipe);
 
       data.allRecipes.push(newRecipe);
+      console.log(data.allRecipes);
 
+      return ID;
 
     },
 
@@ -79,11 +80,17 @@ var UIController = (function () {
     ingredientUnit: '.panel__unit',
     currentRecipeList: '.current-recipe__list',
 
+    newRecipeName: '.current-recipe__name',
+
     // buttons
     addIngredientBtn: '.add-ingredient',
-    saveRecipeBtn: '.current-recipe__save'
+    saveRecipeBtn: '.current-recipe__save',
+    allRecipes: '.recipes'
 
   }
+
+  // variable to store current recipe. onClick append it to html
+  var newRecipe = document.createElement('ul');
 
   return {
     getInput: function () {
@@ -95,7 +102,7 @@ var UIController = (function () {
       }
     },
 
-    updateIngredients: function (ID, name, amount, unit) {
+    addIngredient: function (ID, name, amount, unit) {
       var newIngredient, ing, am, uni, btnDelete;
 
       newIngredient = document.createElement('li');
@@ -116,16 +123,19 @@ var UIController = (function () {
 
       newIngredient.appendChild(ing);
       newIngredient.appendChild(am);
-      newIngredient.appendChild(btnDelete);
 
+      newIngredient.appendChild(btnDelete);
+      // debugger;
       document.querySelector(DOMstrings.currentRecipeList).appendChild(newIngredient);
 
       // clear inputs
-      this.clearInputs();
+      this.clearAddInputs();
+
+      return newIngredient;
 
     },
 
-    clearInputs: function () {
+    clearAddInputs: function () {
       var inputs;
 
       inputs = document.querySelectorAll(DOMstrings.ingredientName + ',' + DOMstrings.ingredientAmount);
@@ -139,11 +149,33 @@ var UIController = (function () {
       inputs[0].focus();
     },
 
+    curRecipeAddChild: function (ingredient) {
+      newRecipe.appendChild(ingredient)
+      console.log(newRecipe);
+    },
+
+    curRecipeDelChild: function (id) {
+      newRecipe.removeChild(newRecipe.children[id]);
+    },
+
+    addRecipe: function (id) {
+      // var curRecipe, newRecipe;
+
+      // curRecipeStr = document.querySelector(DOMstrings.currentRecipeList).innerHTML;
+
+      // newRecipe = document.createElement('ul');
+      newRecipe.className = 'recipes__list';
+      newRecipe.setAttribute('data-id', id);
+      newRecipeCloned = newRecipe.cloneNode(true);
+      // newRecipe.innerHTML = curRecipeStr;
+      document.querySelector(DOMstrings.allRecipes).appendChild(newRecipeCloned);
+
+    },
+
     getDOMstrings: function () {
       return DOMstrings;
     }
   }
-
 
 })();
 
@@ -172,17 +204,23 @@ var controller = (function (recipesCtrl, UICtrl) {
 
 
   var addIngredient = function () {
-    var input, newItem;
+    var input, newItem, newItemEl, clonedEl;
 
     input = UICtrl.getInput();
 
     if (input.ingredient !== '' && !isNaN(parseFloat(input.amount))) {
       newItem = recipesCtrl.addItem(input.ingredient, input.amount, input.unit);
       // debugger;
-      UICtrl.updateIngredients(newItem.id, input.ingredient, input.amount, input.unit);
+
+      // Update current list element on the UI
+      newItemEl = UICtrl.addIngredient(newItem.id, input.ingredient, input.amount, input.unit);
+      // Removing button to display it on allRecipes section
+      clonedEl = newItemEl.cloneNode(true);
+      clonedEl.removeChild(clonedEl.lastChild);
+
+      UIController.curRecipeAddChild(clonedEl);
+
     }
-
-
   }
 
   var deleteIngredient = function (e) {
@@ -191,26 +229,34 @@ var controller = (function (recipesCtrl, UICtrl) {
 
     if (parent.id && e.target.tagName === 'BUTTON') {
 
+      // remove from recipes DATA
       recipesCtrl.removeItem(parseInt(parent.id));
+
+      // remove from the UI
       document.querySelector(DOM.currentRecipeList).removeChild(parent);
+
+      // remove from newRecipe temporary variable
+      UIController.curRecipeDelChild(parseInt(parent.id));
     }
   }
 
   var saveCurrentRecipe = function () {
+    var name;
 
-    // add current recipe to DATA structure
-    recipesCtrl.addCurRecipe();
-    // clear current recipe DATA array
+    name = document.querySelector(DOM.newRecipeName).value;
 
-    // add current recipe to the UI
+    if (name !== '') {
 
-    // clear the current-recipe UI
-
-    //
+      // add current recipe to DATA structure
+      var ID = recipesCtrl.addCurRecipe(name);
+      // clear current recipe DATA array
 
 
+      // add current recipe to the UI
+      UIController.addRecipe(ID);
+
+    }
   }
-
 
   return {
     init: function () {
