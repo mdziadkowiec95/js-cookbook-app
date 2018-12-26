@@ -1,3 +1,8 @@
+
+
+
+
+
 var recipesController = (function () {
 
   var Ingredient = function (id, name, amount, unit) {
@@ -15,8 +20,8 @@ var recipesController = (function () {
 
   var data = {
 
-    currentRecipe: [],
-    allRecipes: []
+    currentRecipe: [], // current recipe Ingredient instances
+    allRecipes: []  // Recipe instances
 
   };
 
@@ -150,7 +155,11 @@ var UIController = (function () {
     },
 
     curRecipeAddChild: function (ingredient) {
-      newRecipe.appendChild(ingredient)
+      var clonedEl;
+
+      clonedEl = ingredient.cloneNode(true);
+      clonedEl.removeChild(clonedEl.lastChild);
+      newRecipe.appendChild(clonedEl)
       console.log(newRecipe);
     },
 
@@ -162,15 +171,17 @@ var UIController = (function () {
       }
     },
 
-    addRecipe: function (id) {
+    addRecipe: function (id, name) {
       // var curRecipe, newRecipe;
 
       // curRecipeStr = document.querySelector(DOMstrings.currentRecipeList).innerHTML;
 
       // newRecipe = document.createElement('ul');
       newRecipe.className = 'recipes__list';
+      // newRecipe.setAttribute('data-id', id);
       newRecipe.setAttribute('data-id', id);
       newRecipeCloned = newRecipe.cloneNode(true);
+
       // newRecipe.innerHTML = curRecipeStr;
       document.querySelector(DOMstrings.allRecipes).appendChild(newRecipeCloned);
 
@@ -208,7 +219,7 @@ var controller = (function (recipesCtrl, UICtrl) {
 
 
   var addIngredient = function () {
-    var input, newItem, newItemEl, clonedEl;
+    var input, newItem, newItemEl;
 
     input = UICtrl.getInput();
 
@@ -218,11 +229,12 @@ var controller = (function (recipesCtrl, UICtrl) {
 
       // Update current list element on the UI
       newItemEl = UICtrl.addIngredient(newItem.id, input.ingredient, input.amount, input.unit);
-      // Removing button to display it on allRecipes section
-      clonedEl = newItemEl.cloneNode(true);
-      clonedEl.removeChild(clonedEl.lastChild);
 
-      UIController.curRecipeAddChild(clonedEl);
+      // Removing button to display it on allRecipes section
+      // clonedEl = newItemEl.cloneNode(true);
+      // clonedEl.removeChild(clonedEl.lastChild);
+
+      UIController.curRecipeAddChild(newItemEl);
 
     }
   }
@@ -257,7 +269,7 @@ var controller = (function (recipesCtrl, UICtrl) {
 
 
       // add current recipe to the UI
-      UIController.addRecipe(ID);
+      UIController.addRecipe(ID, name);
 
     }
   }
