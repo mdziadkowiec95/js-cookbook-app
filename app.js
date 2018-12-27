@@ -111,7 +111,7 @@ var UIController = (function () {
     // buttons
     addIngredientBtn: '.add-ingredient',
     saveRecipeBtn: '.recipe__save',
-    // deleteRecipeBtn: '.add-recipes__delete',
+    removingModeToggler: '.all-recipes__mode-toggler',
 
     allRecipes: '.all-recipes',
     // allRecipesBox: '.all-recipes__box'
@@ -237,6 +237,19 @@ var UIController = (function () {
       document.querySelector(DOMstrings.allRecipes).appendChild(recipeBox);
     },
 
+    toggleRemovingMode: function (e) {
+      var allRecipesWrapper = document.querySelector(DOMstrings.allRecipes);
+
+      if (allRecipesWrapper.classList.contains('removing')) {
+        allRecipesWrapper.classList.remove('removing');
+        e.target.textContent = 'Turn ON removing MODE';
+      } else {
+        allRecipesWrapper.classList.add('removing');
+        e.target.textContent = 'Turn OFF removing MODE';
+      }
+
+    },
+
     showConfirmModal: function () {
       document.querySelector(DOMstrings.confirmWrapper).classList.remove('js-hidden');
     },
@@ -291,6 +304,10 @@ var controller = (function (recipesCtrl, UICtrl) {
     // delete recipe from All recipes list (set up listener to '.all-recipes' wrapper)
     document.querySelector(DOM.allRecipes).addEventListener('click', showConfirmModal);
     document.querySelector(DOM.confirmButtons).addEventListener('click', deleteRecipe);
+
+
+    // toggle removing recipe MODE
+    document.querySelector(DOM.removingModeToggler).addEventListener('click', UICtrl.toggleRemovingMode);
   }
 
 
@@ -391,23 +408,6 @@ var controller = (function (recipesCtrl, UICtrl) {
 
     }
   }
-
-  // var deleteRecipe = function (e) {
-
-  //   UIController.showConfirmModal();
-
-  //   var parent = e.target.parentNode;
-
-  //   if (parent.dataset.id && e.target.tagName === 'BUTTON') {
-
-  //     // remove from recipes DATA
-  //     recipesCtrl.removeRecipe(parseInt(parent.dataset.id));
-
-  //     // remove from the UI
-  //     UICtrl.removeRecipe(parent);
-
-  //   }
-  // }
 
   return {
     init: function () {
