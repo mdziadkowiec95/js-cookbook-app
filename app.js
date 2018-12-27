@@ -111,11 +111,12 @@ var UIController = (function () {
     // buttons
     addIngredientBtn: '.add-ingredient',
     saveRecipeBtn: '.recipe__save',
-    // deleteRecipeBtn: '.add-recipes__delete',
+    removingModeToggler: '.all-recipes__mode-toggler',
 
     allRecipes: '.all-recipes',
     // allRecipesBox: '.all-recipes__box'
-    confirmWrapper: '.confirm'
+    confirmWrapper: '.confirm',
+    confirmButtons: '.confirm__buttons'
 
   }
 
@@ -233,19 +234,32 @@ var UIController = (function () {
       recipeBox.appendChild(newRecipeCloned); // adding current recipe list to recipe wrapper el
       recipeBox.appendChild(deleteRecipeBtn);
 
-      // newRecipe.innerHTML = curRecipeStr;
       document.querySelector(DOMstrings.allRecipes).appendChild(recipeBox);
-
-      // this.clearAddInputs();
-
     },
 
-    removeRecipe: function (recipeEl) {
-      document.querySelector(DOMstrings.allRecipes).removeChild(recipeEl);
+    toggleRemovingMode: function (e) {
+      var allRecipesWrapper = document.querySelector(DOMstrings.allRecipes);
+
+      if (allRecipesWrapper.classList.contains('removing')) {
+        allRecipesWrapper.classList.remove('removing');
+        e.target.textContent = 'Turn ON removing MODE';
+      } else {
+        allRecipesWrapper.classList.add('removing');
+        e.target.textContent = 'Turn OFF removing MODE';
+      }
+
     },
 
     showConfirmModal: function () {
       document.querySelector(DOMstrings.confirmWrapper).classList.remove('js-hidden');
+    },
+
+    hideConfirmModal: function () {
+      document.querySelector(DOMstrings.confirmWrapper).classList.add('js-hidden');
+    },
+
+    removeRecipe: function (recipeEl) {
+      document.querySelector(DOMstrings.allRecipes).removeChild(recipeEl);
     },
 
     setSaveBtnState: function () {
@@ -269,6 +283,7 @@ var UIController = (function () {
 var controller = (function (recipesCtrl, UICtrl) {
 
   var DOM = UICtrl.getDOMstrings();
+  var clickedRecipe;
 
   var setupEventListeners = function () {
 
@@ -287,8 +302,12 @@ var controller = (function (recipesCtrl, UICtrl) {
     document.querySelector(DOM.saveRecipeBtn).addEventListener('click', saveCurrentRecipe);
 
     // delete recipe from All recipes list (set up listener to '.all-recipes' wrapper)
-    document.querySelector(DOM.allRecipes).addEventListener('click', deleteRecipe);
+    document.querySelector(DOM.allRecipes).addEventListener('click', showConfirmModal);
+    document.querySelector(DOM.confirmButtons).addEventListener('click', deleteRecipe);
 
+
+    // toggle removing recipe MODE
+    document.querySelector(DOM.removingModeToggler).addEventListener('click', UICtrl.toggleRemovingMode);
   }
 
 
@@ -356,19 +375,36 @@ var controller = (function (recipesCtrl, UICtrl) {
     }
   }
 
+  var showConfirmModal = function (e) {
+
+    clickedRecipe = e.target.parentNode;
+
+    if (clickedRecipe.dataset.id && e.target.tagName === 'BUTTON') {
+      UICtrl.showConfirmModal();
+    }
+
+  }
+
   var deleteRecipe = function (e) {
+    var clickedEl = e.target;
 
-    UIController.showConfirmModal();
+    if (clickedEl.tagName === 'BUTTON') {
 
-    var parent = e.target.parentNode;
+      if (clickedEl.className === 'btn btn-success') {
+        // remove from recipes DATA
+        recipesCtrl.removeRecipe(parseInt(clickedRecipe.dataset.id));
 
-    if (parent.dataset.id && e.target.tagName === 'BUTTON') {
+        // remove from the UI
+        UICtrl.removeRecipe(clickedRecipe);
 
-      // remove from recipes DATA
-      recipesCtrl.removeRecipe(parseInt(parent.dataset.id));
+        // hide confirm modal from the UI
 
-      // remove from the UI
-      UICtrl.removeRecipe(parent);
+        UICtrl.hideConfirmModal();
+
+      } else if (clickedEl.className === 'btn btn-danger') {
+        UICtrl.hideConfirmModal();
+      }
+
 
     }
   }

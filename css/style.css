@@ -126,19 +126,34 @@ body {
   position: absolute;
   top: -14px;
   right: -12px;
+  visibility: hidden;
   opacity: 0;
+}
+
+.all-recipes.removing .all-recipes__delete {
+  
+  visibility: visible;
+  opacity: 1;
   transition: opacity .3s ease;
 }
 
-.all-recipes__box:hover .all-recipes__delete {
+/* .all-recipes__box .all-recipes__delete {
   opacity: 1;
-}
+} */
 
 .all-recipes__box h3 {
   padding-bottom: .3em;
   text-align: center;
   font-weight: 400;
   border-bottom: 1px dashed green;
+}
+
+.all-recipes__mode-toggler {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 990;
+  transform: translateX(-50%);
 }
 
 
@@ -154,6 +169,7 @@ body {
   background-color: rgba(36, 36, 36, 0.7);
   visibility: visible;
   opacity: 1;
+  transition: opacity .25s ease;
 }
 
 .confirm.js-hidden {
