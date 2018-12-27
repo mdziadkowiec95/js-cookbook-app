@@ -29,15 +29,16 @@
           </select>
         </div>
 
-        <button class="add-ingredient btn btn-primary">Add</button>
+        <button class="add-ingredient btn btn-primary">Add &rarr;</button>
       </div>
 
-      <div class="current-recipe">
-        <div class="current-recipe__add-recipe">
-          <input type="text" class="current-recipe__name form-control" id="" placeholder="Recipe name">
-          <button class="current-recipe__save btn btn-success">Save recipe</button>
+      <div class="recipe">
+        <div class="recipe__add-recipe">
+          <input type="text" class="recipe__name form-control" id="" placeholder="Recipe name">
+          <button class="recipe__save btn btn-success">Save recipe</button>
+          <p class="tooltip">Click the button to save entire recipe to the board.</p>
         </div>
-        <ul class="current-recipe__list">
+        <ul class="recipe__list">
 
         </ul>
 
@@ -45,10 +46,22 @@
     </div>
     <hr>
 
-    <div class="recipes">
+    <div class="all-recipes">
 
     </div>
   </div>
+
+  <!-- confirm removing recipe MODAL window -->
+  <div class="confirm js-hidden">
+    <div class="confirm__modal">
+      <h3 class="confirm__question">Do you want to remove recipe?</h3>
+      <div class="confirm__buttons">
+        <button class="btn btn-success">Yes, I do.</button>
+        <button class="btn btn-danger">No, I don't.</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
   <script src="app.js"></script>
 </body>
